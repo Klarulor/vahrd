@@ -1,0 +1,138 @@
+{
+  "devices": [
+    {
+      "id": "testvirtualbulb",
+      "isDevice": true,
+      "mqtt": {
+        "isEnabled": true
+      },
+      "controller": {
+        "type": "BULB",
+        "args": {
+          "isTurnedOn": false,
+          "isPWMEnabled": false,
+          "pwmValue": 250
+        }
+      },
+      "provider": {
+        "type": "ARDUINO",
+        "args": {
+          "connector": {
+            "type": "PIN",
+            "module": {
+              "pin": 54,
+              "type": "ANALOG",
+              "mode": "WRITE"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "testMon",
+      "isDevice": true,
+      "mqtt": {
+        "isEnabled": true
+      },
+      "controller": {
+        "type": "BULB",
+        "args": {
+          "isTurnedOn": true,
+          "isPWMEnabled": true,
+          "pwmValue": 5
+        }
+      },
+      "provider": {
+        "type": "ARDUINO",
+        "args": {
+          "connector": {
+            "type": "PIN",
+            "module": {
+              "pin": 55,
+              "type": "ANALOG",
+              "mode": "WRITE"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "testtogglebutton",
+      "isDevice": true,
+      "mqtt": {
+        "isEnabled": true
+      },
+      "controller": {
+        "type": "BUTTON",
+        "args": {
+          "value": 0
+        }
+      },
+      "provider": {
+        "type": "ARDUINO",
+        "args": {
+          "connector": {
+            "type": "PIN",
+            "module": {
+              "pin": 7,
+              "type": "DIGITAL",
+              "mode": "READ"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "dallas",
+      "isDevice": true,
+      "mqtt": {
+        "isEnabled": true
+      },
+      "controller": {
+        "type": "TEMPERATURE_SENSOR",
+        "args": {
+          "value": 19.6
+        }
+      },
+      "provider": {
+        "type": "ARDUINO",
+        "args": {
+          "connector": {
+            "type": "DALLAS",
+            "module": {
+              "pin": 2
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "ens",
+      "isDevice": true,
+      "mqtt": {
+        "isEnabled": true
+      },
+      "controller": {
+        "type": "ENS",
+        "args": {
+          "value": {
+            "temperature": 20,
+            "humidity": 21,
+            "tvoc": 11,
+            "aqi": 1,
+            "eco2": 400
+          }
+        }
+      },
+      "provider": {
+        "type": "ARDUINO",
+        "args": {
+          "connector": {
+            "type": "ENS",
+            "module": {}
+          }
+        }
+      }
+    }
+  ]
+}

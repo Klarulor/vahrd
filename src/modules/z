@@ -1,0 +1,108 @@
+- light:
+      name: "Office Light RGB"
+      state_topic: "home/testvirtualbulb/base/status"
+      command_topic: "home/testvirtualbulb/base/switch"
+      state_value_template: "{{ value_json.state }}"
+      qos: 0
+      payload_on: "ON"
+      payload_off: "OFF"
+      optimistic: false
+  - binary_sensor:
+      name: "Test button" # Замените на желаемое имя сенсора
+      state_topic: "home/testtogglebutton/base/status" # Топик, в который ваш скрипт публикует состояние
+      value_template: "{{ value_json.state }}"
+      payload_on: "1"
+      payload_off: "0"
+      device_class: power
+  - sensor:
+      name: "Breadboard temperature sensor" # Замените на желаемое имя сенсора
+      state_topic: "home/dallas/base/status" # Топик, в который ваш скрипт публикует состояние
+      value_template: "{{ value_json.temperature }}"
+      unit_of_measurement: "°C"
+      device_class: temperature
+  - sensor:
+      name: "ZTH01-1 temperature" # Замените на желаемое имя сенсора
+      state_topic: "zigbee2mqtt/ZTH01-1" # Топик, в который ваш скрипт публикует состояние
+      value_template: "{{ value_json.temperature }}"
+      unit_of_measurement: "°C"
+      device_class: temperature
+  - sensor:
+      name: "ZTH01-1 humidity" # Замените на желаемое имя сенсора
+      state_topic: "zigbee2mqtt/ZTH01-1" # Топик, в который ваш скрипт публикует состояние
+      value_template: "{{ value_json.humidity }}"
+      unit_of_measurement: "%"
+      device_class: humidity
+  - binary_sensor:
+      name: "Main door sensor" # Замените на желаемое имя сенсора
+      state_topic: "zigbee2mqtt/MainDoorSensor" # Топик, в который публикуется состояние
+      value_template: "{{ value_json.contact }}" # Извлечение значения contact из JSON
+      device_class: opening # Указание правильного класса устройства
+      payload_on: false # Состояние "открыто"
+      payload_off: true # Состояние "закрыто"
+      qos: 2
+  - sensor:
+      name: "ENS-1 temperature"
+      state_topic: "home/ens/base/status"
+      value_template: "{{ value_json.temperature }}"
+      unit_of_measurement: "°C"
+      device_class: temperature
+  - sensor:
+      name: "ENS-1 humidity"
+      state_topic: "home/ens/base/status"
+      value_template: "{{ value_json.humidity }}"
+      unit_of_measurement: "%"
+      device_class: humidity
+  - sensor:
+      name: "ENS-1 TVOC"
+      state_topic: "home/ens/base/status"
+      value_template: "{{ value_json.tvoc }}"
+      unit_of_measurement: "ppb"
+      device_class: gas
+  - sensor:
+      name: "ENS-1 CO₂"
+      state_topic: "home/ens/base/status"
+      value_template: "{{ value_json.eco2 }}"
+      unit_of_measurement: "ppm"
+      device_class: gas
+  - sensor:
+      name: "ENS-1 AQI"
+      state_topic: "home/ens/base/status"
+      value_template: "{{ value_json.aqi }}"
+      unit_of_measurement: "µg/m³"
+      device_class: aqi
+
+sensor:
+  - platform: rest
+    name: "Remote CPU Load"
+    resource: "http://192.168.0.20:7101/cpu"
+    method: GET
+    value_template: "{{ value_json.cpuLoad }}"
+    unit_of_measurement: "%"
+    scan_interval: 5
+    unique_id: "remote_server_cpu_load"
+
+  - platform: rest
+    name: "Remote Memory Usage Percent"
+    resource: "http://192.168.0.20:7101/cpu"
+    method: GET
+    value_template: "{{ value_json.memoryUsingPercent }}"
+    unit_of_measurement: "%"
+    scan_interval: 5
+    unique_id: "remote_server_memory_usage_percent"
+
+  - platform: rest
+    name: "Electricity Price"
+    resource_template: >
+      {% set start = now().utcnow().replace(minute=0, second=0, microsecond=0).isoformat() + 'Z' %}
+      {% set end = (now().utcnow().replace(minute=0, second=0, microsecond=0) + timedelta(hours=16)).isoformat() + 'Z' %}
+      https://dashboard.elering.ee/api/nps/price?start={{ start }}&end={{ end }}
+    method: GET
+    value_template: >
+      {% if value_json and value_json.data and value_json.data.ee %}
+        {{ ((value_json.data.ee[0].price | float * 1.22)/10) | round(2) }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "¢"
+    scan_interval: 60 # Интервал обновления (5 минут)
+    unique_id: "electricity_price_sensor"

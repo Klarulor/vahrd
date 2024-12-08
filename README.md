@@ -1,0 +1,1 @@
+# VahRD - Mutltitool for homeassistant, that can provide any devices via arduino or other virtual providers
