@@ -25,6 +25,13 @@ export class ControllerBase implements IControllerBase, ISerializable {
         changeMqttDeviceState(this);
     }
 
+    protected sendMqtt(): void{
+        this.device.mqtt?.sendUpdate(this.device);
+    }
+    // protected sendMqttOnlyUpdated(): void{
+    //
+    // }
+
 }
 
 export interface IControllerBase{
@@ -37,4 +44,4 @@ export interface IControllerConstructorArgs{
     args: any
 }
 
-export type ControllerBaseType = "BULB" | "BUTTON" | "TEMPERATURE_SENSOR" | "ENS";
+export type ControllerBaseType = "BULB" | "BUTTON" | "TEMPERATURE_SENSOR" | "ENS" | "DETACHED_TEMPERATURE_SENSOR";

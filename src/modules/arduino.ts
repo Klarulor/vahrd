@@ -38,9 +38,10 @@ export class Arduino {
         if(cmd == "1"){
             if(Arduino._callback)
             {
-                console.log("Arduino confirmation was received");
+
                 Arduino._callback();
             }
+            console.log("Arduino confirmation was received");
         }else if(cmd.startsWith("011")){ // response for pin read request
             const signature = cmd.slice(3,6);
             const v = Number(cmd.slice(6,9));

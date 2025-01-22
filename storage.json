@@ -133,6 +133,32 @@
           }
         }
       }
+    },
+    {
+      "id": "detached_sensor",
+      "isDevice": true,
+      "mqtt": {
+        "isEnabled": true
+      },
+      "controller": {
+        "type": "DETACHED_TEMPERATURE_SENSOR",
+        "args": {
+          "value": 0
+        }
+      },
+      "provider": {
+        "type": "ARDUINO",
+        "args": {
+          "connector": {
+            "type": "PIN",
+            "module": {
+              "pin": 55,
+              "type": "ANALOG",
+              "mode": "READ"
+            }
+          }
+        }
+      }
     }
   ]
 }

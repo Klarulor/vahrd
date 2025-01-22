@@ -122,47 +122,31 @@ void readCommand(int len){
         Serial.println("called 8");
         free(signature);
       } else if(cmd[2] == '2'){
-        Serial.println("z0");
-        
-        //delay(1000);
-        Serial.println("z1");
-        
-        Serial.println("z2");
         sensors_event_t humidity1, temp;
-        Serial.println("z2.5");
         aht.getEvent(&humidity1, &temp);
-        Serial.println("z3");
         int tempC = (temp.temperature);
         int humidity = (humidity1.relative_humidity);
-        Serial.println("z4");
         ens160.set_envdata(tempC, humidity);
-        Serial.println("z4.2");
         delay(200);
         ens160.measure(true);
         delay(200);
-        Serial.println("z4.5");
         ens160.measureRaw(true);
         delay(200);
-        Serial.println("z5");
 
         int aqi = ens160.getAQI();
         int tvoc = ens160.getTVOC();
         int eco2 = ens160.geteCO2();
-        Serial.println("z6");
 
         char* signature = sliceCMD(3, 5);
         Serial.println("z7");
         if (signature == nullptr) return;
-       // Serial.println("z8");
-        //Serial.println(eco2);
-        //Serial.println(tvoc);
-        //Serial.println(String(numToStr(eco2, 5)));
         String strHum = String(numToStr(humidity, 3));
-        //Serial.println(strHum);
-        //Serial.println(String(humidity));
-        //Serial.println("051" + String(signature) + numToStr((int)(num * 10), 3));
         Serial.println("052" + String(signature) +String(numToStr(tempC, 2))+strHum+String(numToStr(aqi,1))+String(numToStr(eco2, 5))+String(numToStr(tvoc,5)));
         free(signature);
+      } else if(cmd[2] == '3'){
+        // char* signature = sliceCMD(3, 5);
+        // if (signature == nullptr) return;
+        // int pin = parseCMDInt(6, 8);
 
       }
     }
@@ -185,3 +169,4 @@ void loop() {
     }
   }
 }
+

@@ -8,4 +8,4 @@ RUN npm install
 
 COPY src src
 
-CMD [ "npx", "ts-node", "src" ]
+CMD [ "npx", "ts-node", "src/index.ts" ]

@@ -7,6 +7,7 @@ import {ArduinoProvider, IArduinoProviderConstructorArgs} from "../providers/Ard
 import {ButtonController} from "../controllers/ButtonController";
 import {TemperatureSensorController} from "../controllers/TemperatureSensorController";
 import {EnsSensorController} from "../controllers/EnsSensorController";
+import {DetachedTemperatureSensor} from "../controllers/DetachedTemperatureSensor";
 
 export function createProvider(args: IProviderConstructorArgs, dev: Device): ProviderBase {
     let obj: ProviderBase | null = null;
@@ -29,5 +30,7 @@ export function createController(args: IControllerConstructorArgs, dev: Device):
         return new TemperatureSensorController(args,dev);
     else if(args.type == "ENS")
         return new EnsSensorController(args,dev);
+    else if(args.type == "DETACHED_TEMPERATURE_SENSOR")
+        return new DetachedTemperatureSensor(args, dev);
     return new BulbController(args, dev);
 }

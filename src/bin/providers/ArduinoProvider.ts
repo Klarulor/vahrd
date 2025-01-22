@@ -57,10 +57,20 @@ export class ArduinoProvider extends ProviderBase {
                 const data = await Arduino.readENS();
                 r(data);
             })
+        }else if(args.connector.type == "DETACHED_TEMPERATURE_SENSOR"){
+            console.log('reading mode');
+            const module = args.connector.module as IVirtualPinModule;
+            this.read = () => new Promise<number>(async r => {
+                const data = await Arduino.readPin(module.pin, module.type);
+                r(data as number);
+            });
         }
     }
     private initConnector(args: IInternalArduinoProviderArgs, dev: Device): void{
         if(args.connector.type == "PIN"){
+            const module = args.connector.module as IVirtualPinModule;
+            Arduino.pinMode(module.pin, module.mode);
+        }else if(args.connector.type == "DETACHED_TEMPERATURE_SENSOR"){
             const module = args.connector.module as IVirtualPinModule;
             Arduino.pinMode(module.pin, module.mode);
         }
@@ -96,4 +106,4 @@ export interface IVirtualEnsModule extends IVirtualModule{
 
 }
 
-export type VirtualConnectorType = "PIN" | "DALLAS" | "ENS";
+export type VirtualConnectorType = "PIN" | "DALLAS" | "ENS" | "DETACHED_TEMPERATURE_SENSOR";
