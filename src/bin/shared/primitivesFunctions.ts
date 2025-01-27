@@ -23,3 +23,10 @@ export const randomStr = (len: number, useNumbers: boolean, useSpecificSymbols: 
 export function randomNumber(min: number, max: number): number {
     return (Math.random() * (max - min)) + min;
 }
+
+export function getTextTime(includeSeconds: boolean = false): string{
+    const date = new Date(Date.now())
+    if(!includeSeconds)
+        return `${expandString(date.getHours(), '0',2)}:${expandString(date.getMinutes(), '0',2)}`;
+    else return `${expandString(date.getHours(), '0',2)}:${expandString(date.getMinutes(), '0',2)}:${expandString(date.getSeconds(), '0',2)}`;
+}
