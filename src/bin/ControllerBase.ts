@@ -44,4 +44,5 @@ export interface IControllerConstructorArgs{
     args: any
 }
 
-export type ControllerBaseType = "BULB" | "BUTTON" | "TEMPERATURE_SENSOR" | "ENS" | "DETACHED_TEMPERATURE_SENSOR";
+export type ControllerBaseType = "BULB" | "BUTTON" | "TEMPERATURE_SENSOR" | "ENS" | "DETACHED_TEMPERATURE_SENSOR"
+                                | "REMOTE_DESKTOP";
