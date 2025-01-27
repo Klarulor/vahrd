@@ -15,6 +15,8 @@ export class RemoteDesktopSlave extends RemoteConstrollerBase{
     private _deviceId = 1;
     onProviderReady = () => {
         console.log(`Slave ready`);
+        this.drawScreen();
+        console.log(`DROOOOOOOOOOOOOOOOOOOOOOOOOVE`);
     }
 
     private drawScreen(): void{
