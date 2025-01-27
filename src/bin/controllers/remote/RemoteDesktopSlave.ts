@@ -5,6 +5,7 @@ import { Device } from "../../Device";
 import { ArduinoProvider } from "../../providers/ArduinoProvider";
 import { IRemoteControllerBaseArgs, RemoteConstrollerBase } from "../../RemoteControllerBase";
 import { TextEncoder } from 'node:util'
+import { getTextTime } from "../../shared/primitivesFunctions";
 
 export class RemoteDesktopSlave extends RemoteConstrollerBase{
     private readonly _ArduinoProvider: ArduinoProvider;
@@ -16,14 +17,18 @@ export class RemoteDesktopSlave extends RemoteConstrollerBase{
     onProviderReady = () => {
         this.register(this.args.args as IRemoteDesktopSlaveControllerArgs)
         console.log(`Slave ready`);
-        this.drawScreen();
+        this.drawTestScreen();
         console.log(`DROOOOOOOOOOOOOOOOOOOOOOOOOVE`);
     }
 
-    private drawScreen(): void{
+    private drawTestScreen(): void{
         this.clearDiaplay();
         this.turnOnBacklight();
         this.print("Yo 12345");
+    }
+    private drawScreen(): void{
+        const time = getTextTime();
+        
     }
 
     // commands
