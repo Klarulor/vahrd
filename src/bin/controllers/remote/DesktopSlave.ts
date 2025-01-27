@@ -14,9 +14,14 @@ export class DesktopSlave extends RemoteConstrollerBase{
     }
     private _deviceId = 1;
     onProviderReady = () => {
-        DesktopSlave.encoder.encoding = ""
+        console.log(`Slave ready`);
     }
 
+    private drawScreen(): void{
+        this.clearDiaplay();
+        this.turnOnBacklight();
+        this.print("Yo 12345");
+    }
 
     // commands
     private turnOffBacklight(): void {
@@ -44,7 +49,7 @@ export class DesktopSlave extends RemoteConstrollerBase{
         if(x>255||y>255) throw `Bad cursor value for (${x};${y})`;
         Arduino.sendRemote(this._deviceId, [7,x,y]);
     }
-    private write(text: string){
+    private print(text: string){
         const buf = [8,...Array.from(this.convertToWindows1252(text))];
         Arduino.sendRemote(this._deviceId ,buf);
     }
