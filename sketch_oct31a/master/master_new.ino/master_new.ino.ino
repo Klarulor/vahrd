@@ -30,7 +30,7 @@ void readPacket(byte* packet, byte len){
       byte* bytes = new byte[4]{3,1,id,0};
       Serial1.write(bytes, 4);
       delete[] bytes;
-    }else if(packet[1] == 3){ // 1 3 i pck(8)
+    }else if(packet[1] == 3){ //emit remote
       byte id = packet[2];
       byte dataSize = len-3;
       byte pckSize = dataSize+4;
