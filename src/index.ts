@@ -11,41 +11,6 @@ import {Arduino} from "./modules/arduino";
         initMqtt();
         runStorage();
         runMqtt();
-        // const provider: IArduinoProviderConstructorArgs = {
-        //     type: "ARDUINO",
-        //     args: {
-        //         connector: {
-        //             type: "PIN",
-        //             module: {
-        //                 pin: 13,
-        //                 type: "ANALOG",
-        //                 mode: "WRITE"
-        //             }
-        //         }
-        //     },
-        //
-        // };
-        // const args: IDeviceContructorArgs = {
-        //     id: "testvirtualbulb",
-        //     isDevice: true,
-        //     controller: {
-        //         type: "BULB",
-        //         args: {
-        //             isTurnedOn: true,
-        //             isPWMEnabled: true,
-        //         }
-        //     },
-        //     provider: provider,
-        //     mqtt: {
-        //         isEnabled: true
-        //     }
-        //
-        // }
-        //const dev = Device.create(args);
-        //console.log(dev)
-        //saveDevice(dev);
-
-
     });
 
 })()

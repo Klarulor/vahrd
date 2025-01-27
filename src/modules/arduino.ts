@@ -129,6 +129,9 @@ export class Arduino {
         Arduino.send([2,5,signature]);
         return promise;
     }
+    public static sendRemote(id: number, remotePacket: number[]): void{
+        Arduino.send([1,3,id,...remotePacket]);
+    }
 
     private static readPacket(packet: number[]): void{
         console.log(`Handling ${packet.join(' ')}`);
