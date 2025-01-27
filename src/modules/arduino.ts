@@ -45,20 +45,13 @@ export class Arduino {
         }
         Arduino.buffer.push(...ar);
 
-        // Обрабатываем команды из буфера
         while (Arduino.buffer.length > 0) {
-            const packetSize = Arduino.buffer[0]; // Первый байт — размер команды
-
-            // Если в буфере недостаточно данных для текущей команды — ждем следующую часть
+            const packetSize = Arduino.buffer[0];
             if (Arduino.buffer.length < packetSize + 1) {
                 break;
             }
-
-            // Извлекаем команду из буфера
             const packet = Arduino.buffer.slice(0, packetSize + 1);
-            Arduino.buffer = Arduino.buffer.slice(packetSize + 1); // Убираем обработанную команду из буфера
-
-            // Обработка команды
+            Arduino.buffer = Arduino.buffer.slice(packetSize + 1);
             console.log(`Processing packet: ${packet.join(' ')}`);
             Arduino.readPacket(packet);
         }
@@ -78,8 +71,10 @@ export class Arduino {
         }
     }
 
-    public static run(callback: () => any): void {
+    private static _slaveRegisterCallback: (id: number) => boolean;
+    public static run(callback: () => any, slaveRegisterCallback: (id: number) => boolean): void {
         this._callback = callback;
+        Arduino._slaveRegisterCallback = slaveRegisterCallback;
     }
 
     public static pinMode(pin: number, state: PinMode): void{
@@ -139,7 +134,20 @@ export class Arduino {
         console.log(`Handling ${packet.join(' ')}`);
         const size = packet[0];
         packet = packet.slice(1, packet.length);
-        if(packet[0] == 2){
+        if(packet[0] == 1){
+            if(packet[1] == 1){
+                const id = packet[2];
+                if(Arduino._slaveRegisterCallback)
+                {
+                    const allowRegister = Arduino._slaveRegisterCallback(id);
+                    if(allowRegister){
+                        console.log(`Registering a ${id} slave`);
+                    }else console.log(`Deny register a ${id} slave`);
+                    Arduino.send([1,allowRegister?1:2,id]);
+                }
+            }
+        }
+        else if(packet[0] == 2){
             if(packet[1] == 2){ // read pin response
                 const signature = packet[2];
                 const v = packet[3]*10+packet[4];
