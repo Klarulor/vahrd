@@ -7,3 +7,5 @@ push:
 update:
 	make build
 	make push
+check:
+	tsc -p

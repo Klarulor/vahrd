@@ -3,7 +3,7 @@ import { Arduino } from "../../../modules/arduino";
 import { IControllerConstructorArgs } from "../../ControllerBase";
 import { Device } from "../../Device";
 import { ArduinoProvider } from "../../providers/ArduinoProvider";
-import { RemoteConstrollerBase } from "../../RemoteControllerBase";
+import { IRemoteControllerBaseArgs, RemoteConstrollerBase } from "../../RemoteControllerBase";
 import { TextEncoder } from 'node:util'
 
 export class RemoteDesktopSlave extends RemoteConstrollerBase{
@@ -14,6 +14,7 @@ export class RemoteDesktopSlave extends RemoteConstrollerBase{
     }
     private _deviceId = 1;
     onProviderReady = () => {
+        this.register(this.args.args as IRemoteDesktopSlaveControllerArgs)
         console.log(`Slave ready`);
         this.drawScreen();
         console.log(`DROOOOOOOOOOOOOOOOOOOOOOOOOVE`);
@@ -57,4 +58,8 @@ export class RemoteDesktopSlave extends RemoteConstrollerBase{
     }
 
     private convertToWindows1252 = (input: string): Buffer => encode(input, "windows-1252");
+}
+
+export interface IRemoteDesktopSlaveControllerArgs extends IRemoteControllerBaseArgs{
+    ids: number[];
 }
