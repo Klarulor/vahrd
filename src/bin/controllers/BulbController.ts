@@ -73,17 +73,17 @@ export class BulbController extends ControllerBase implements ISwitchable{
     public set isTurnedOn(v: boolean){
         this._isTurnedOn = v;
         if(this.device.provider.type == "ARDUINO"){
-            const arduino = (this.device.provider as ArduinoProvider);
+            const Arduino = (this.device.provider as ArduinoProvider);
             let num = 0;
             if(this._isPWMEnabled){
                 if(v)
                     num = this.pwmValue;
                 else num = 0;
-            }else if(arduino.pinSignalType == "DIGITAL")
+            }else if(Arduino.pinSignalType == "DIGITAL")
                 num = v ? 1 : 0;
-            else if(arduino.pinSignalType == "ANALOG")
+            else if(Arduino.pinSignalType == "ANALOG")
                 num = v ? 255 : 0;
-            arduino.write(num);
+            Arduino.write(num);
             saveDevice(this.device);
             this.changeGlobalState();
         }

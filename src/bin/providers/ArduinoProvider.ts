@@ -22,14 +22,15 @@ export class ArduinoProvider extends ProviderBase {
     }
     serialize = () => this.args;
     override runProvider(){
-        console.log('- provider run()')
-        this.setDataChannels(this.args as any as IInternalArduinoProviderArgs, this.device);
+        console.log('- provider run()');
         this.initConnector(this.args as any as IInternalArduinoProviderArgs, this.device);
+        this.setDataChannels(this.args as any as IInternalArduinoProviderArgs, this.device);
+        
         this.device.controller.onProviderReady();
     };
 
     private setDataChannels(args: IInternalArduinoProviderArgs, dev: Device): void{
-        console.log(args)
+        //nsole.log(args)
         if(args.connector.type == "PIN"){
             const module = args.connector.module as IVirtualPinModule;
             if(module.mode == "WRITE"){
@@ -67,6 +68,7 @@ export class ArduinoProvider extends ProviderBase {
         }
     }
     private initConnector(args: IInternalArduinoProviderArgs, dev: Device): void{
+        console.log((args.connector.module as any)?.pin, (args.connector.module as any)?.mode);
         if(args.connector.type == "PIN"){
             const module = args.connector.module as IVirtualPinModule;
             Arduino.pinMode(module.pin, module.mode);

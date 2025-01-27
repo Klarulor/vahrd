@@ -9,7 +9,8 @@ ScioSense_ENS160 ens160(ENS160_I2CADDR_1);
 Adafruit_AHTX0 aht;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(9600); // main
+  Serial1.begin(9600);
   Serial.println('1');
 
 
@@ -25,7 +26,7 @@ void setup() {
 char cmd[32];
 
 char* slice(const char* ar, byte startIndex, byte endIndex){
-  char* obj = (char*)malloc(sizeof(char) * ((endIndex - startIndex) + 2));
+  char* obj = (char*)malloc(sizeof(char) * ((endIndex - startIndex) + 3));
 
   for(int i = startIndex; i <= endIndex; i++){
     obj[i - startIndex] = ar[i];
@@ -44,6 +45,12 @@ int parseCMDInt(byte startIndex, byte endIndex){
   free(slicedString);
   return num;
 }
+int parseInt(const char* ar, byte startIndex, byte endIndex){
+  char* slicedString = slice(ar, startIndex, endIndex);
+  int num = atoi(slicedString);
+  free(slicedString);
+  return num;
+}
 
 String numToStr(int num, int needLength){
   String str = String(num);
@@ -51,6 +58,24 @@ String numToStr(int num, int needLength){
     str = "0" + str;
   }
   return str;
+}
+
+
+char slaveCmd[256];
+void readSlaveCommand(byte len){
+  if(slaveCmd[0] == '0'){
+    int id = parseInt(slaveCmd, 1,3);
+    if(len == 4){ // identification request
+      //Serial.println("031"+numToStr(id,3));
+    }else if(slaveCmd[4] == '3'){
+      if(slaveCmd[5] == '1'){
+        return; // not using
+      }else if(slaveCmd[5] == '2'){ // incomming rpc
+        int reqLen = parseInt(slaveCmd, 6,8);
+        //Serial.println("032"+numToStr(id,3)+numToStr(reqLen,3)+slice(slaveCmd, 9, reqLen+8));
+      }
+    }
+  }
 }
 
 void readCommand(int len){
@@ -149,16 +174,38 @@ void readCommand(int len){
         // int pin = parseCMDInt(6, 8);
 
       }
+    } else if(cmd[1] == '2'){
+      if(cmd[2] == '1'){ // slave reg ack
+        int id = parseCMDInt(3,5);
+        bool allow = cmd[6] == '1';
+        if(allow){
+          Serial1.println("0"+numToStr(id,3)+"11");
+        }else{
+          Serial1.println("0"+numToStr(id,3)+"10");
+        }
+      }else if(cmd[2] == '2'){ // rem emt
+        int id = parseCMDInt(3,5);
+        int reqLen = parseCMDInt(6,8);
+        String str = "";
+        for(int i = 9; i < reqLen+9; i++){
+          str += cmd[i];
+        }
+        String txt = "0"+numToStr(id, 3)+"23"+numToStr(reqLen,3)+str;
+        Serial.println("Text: |"+txt+"|");
+        Serial1.println(txt);
+      }
     }
   }
 }
 
+
 void loop() {
-  char rc;
   char endMarker = '\n';
+  char avrEndMarker = '\r';
   static byte ndx = 0;
-  while (Serial.available()){
-    rc = Serial.read();
+  static byte sNdx = 0;
+  if (Serial.available()){
+    char rc = Serial.read();
     if(rc != endMarker){
       cmd[ndx] = rc;
       ndx++;
@@ -168,5 +215,20 @@ void loop() {
       ndx = 0;
     }
   }
+  if(Serial1.available()){
+    char rc = Serial1.read();
+    //Serial.println(rc);
+    if(rc != endMarker && rc != avrEndMarker && rc != '\0'){
+      slaveCmd[sNdx] = rc;
+      sNdx++;
+    }else{
+      if(sNdx == 0) return;
+      slaveCmd[sNdx] = '\0';
+      Serial.println("Slave command received "+String(slaveCmd)+" with length: "+sNdx);
+      readSlaveCommand(sNdx);
+      sNdx = 0;
+    }
+  }
+  
 }
 

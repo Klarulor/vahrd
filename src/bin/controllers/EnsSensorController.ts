@@ -8,7 +8,7 @@ import {AverageEqualiser} from "../../utils/AverageEqualiser";
 
 export class EnsSensorController extends ControllerBase{
     private _data?: IEnsData;
-    private readonly _arduinoProvider: ArduinoProvider;
+    private readonly _ArduinoProvider: ArduinoProvider;
 
     private readonly _averageEqualizer: AverageEqualiser<IEnsData>;
 
@@ -19,9 +19,9 @@ export class EnsSensorController extends ControllerBase{
                 get: () => this._data as IEnsData,
             };
         }
-        this._arduinoProvider = this.device.provider as ArduinoProvider;
+        this._ArduinoProvider = this.device.provider as ArduinoProvider;
 
-        this._averageEqualizer = new AverageEqualiser(data => this.data = data, 24, 'NUMERICAL_OBJ');
+        this._averageEqualizer = new AverageEqualiser(data => this.data = data, 12, 'NUMERICAL_OBJ');
     }
     serialize = () => ({
         value: this._data
@@ -30,19 +30,21 @@ export class EnsSensorController extends ControllerBase{
     onProviderReady = () => {
         const ownArgs = (this.args.args as IensSensorControllerArgs);
         this._data = (ownArgs as any).value;
-        console.log("On provider ready invoked;-temperaturesensor");
+        console.log("On provider ready invoked;-ens");
 
         setInterval(async () => {
+            console.log(`-----------------------------reading data`);
             const tData = await this.readData();
-            //console.log(tData);
+            console.log(`-----------------------------success reading data`);
+            console.log(tData);
             this._averageEqualizer.set(tData);
-        },10000);
+        },5000);
         this.device.mqtt?.sendUpdate(this.device);
     }
 
     public readData(): Promise<IEnsData>{
         return new Promise(async r => {
-            const data = await this._arduinoProvider.read() as IEnsData;
+            const data = await this._ArduinoProvider.read() as IEnsData;
             r(data);
         })
     }

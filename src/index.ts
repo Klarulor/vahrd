@@ -4,7 +4,6 @@
 import {Device, IDeviceContructorArgs} from "./bin/Device";
 import {runStorage, saveDevice} from "./Storage";
 import {initMqtt, runMqtt} from "./modules/mqtt";
-import {IArduinoProviderConstructorArgs} from "./bin/providers/ArduinoProvider";
 import {Arduino} from "./modules/arduino";
 
 (() => {

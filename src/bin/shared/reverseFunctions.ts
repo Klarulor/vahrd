@@ -30,9 +30,9 @@ export const getStorageHeap = (): IHeap =>{
                 controller: controllerArgs,
                 mqtt: mqttArgs
             };
-            console.log(Device)
+            //console.log(Device)
             const dev = Device.create(args);
-            console.log(`created`, dev);
+            console.log(`created`, `${dev.id}`);
             obj.devices.push(dev);
         }
     }

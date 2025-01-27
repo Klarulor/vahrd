@@ -7,7 +7,7 @@ import {Arduino} from "../../modules/arduino";
 
 export class ButtonController extends ControllerBase{
     private _value: number = 0;
-    private readonly _arduinoProvider: ArduinoProvider;
+    private readonly _ArduinoProvider: ArduinoProvider;
     constructor(args: IControllerConstructorArgs, dev: Device) {
         super(args, dev);
         if(dev.mqtt){
@@ -17,7 +17,7 @@ export class ButtonController extends ControllerBase{
                 })
             };
         }
-        this._arduinoProvider = this.device.provider as ArduinoProvider;
+        this._ArduinoProvider = this.device.provider as ArduinoProvider;
 
 
     }
@@ -39,7 +39,7 @@ export class ButtonController extends ControllerBase{
 
     public readNumberStateAsync(): Promise<number>{
         return new Promise(async r => {
-           const data = await this._arduinoProvider.read() as number;
+           const data = await this._ArduinoProvider.read() as number;
            r(data);
         })
     }

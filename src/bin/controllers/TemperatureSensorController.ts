@@ -7,7 +7,7 @@ import {Arduino} from "../../modules/arduino";
 
 export class TemperatureSensorController extends ControllerBase{
     private _value: number = 0;
-    private readonly _arduinoProvider: ArduinoProvider;
+    private readonly _ArduinoProvider: ArduinoProvider;
     constructor(args: IControllerConstructorArgs, dev: Device) {
         super(args, dev);
         if(dev.mqtt){
@@ -17,7 +17,7 @@ export class TemperatureSensorController extends ControllerBase{
                 })
             };
         }
-        this._arduinoProvider = this.device.provider as ArduinoProvider;
+        this._ArduinoProvider = this.device.provider as ArduinoProvider;
 
 
     }
@@ -38,7 +38,7 @@ export class TemperatureSensorController extends ControllerBase{
 
     public readTemperature(): Promise<number>{
         return new Promise(async r => {
-            const data = await this._arduinoProvider.read() as number;
+            const data = await this._ArduinoProvider.read() as number;
             r(data);
         })
     }
@@ -48,7 +48,9 @@ export class TemperatureSensorController extends ControllerBase{
     private set value(v: number){
         console.log(`|${v}|${this._value}|${Math.abs(v-this._value).toFixed(1)}`)
         if(parseFloat(Math.abs(v-this._value).toFixed(1)) != 0.1){
-            if(this._value != v){
+
+            if(this._value != v || true){
+                this._value = v;
                 this.device.mqtt?.sendUpdate(this.device);
                 saveDevice(this.device);
                 console.log('publishing')

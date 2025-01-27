@@ -1,8 +1,8 @@
 // ProviderBase.ts
 import { DataVault, DataVaultBase } from "./DataVault";
 import {Device} from "./Device";
-import {IVirtualConnector} from "./providers/ArduinoProvider";
 import {ISerializable} from "./interfaces/ISerializable";
+import {IVirtualConnector} from "./providers/ArduinoProvider";
 
 export abstract class ProviderBase implements IProviderBase, ISerializable {
     public readonly type: ProviderType;

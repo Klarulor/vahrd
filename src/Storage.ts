@@ -45,7 +45,7 @@ function write(storage: IStorage){
 }
 export function runStorage(){
     heap = getStorageHeap();
-    console.log(`creating heap\n-------------------------`,heap,`--------------------------------------`)
+    //console.log(`creating heap\n-------------------------`,heap,`--------------------------------------`)
 }
 
 export const getDevices = () => heap.devices;

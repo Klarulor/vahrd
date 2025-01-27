@@ -23,6 +23,14 @@ export class AverageEqualiser<T>{
 
                     return average as T;
                 }
+            } else if(dataWorker == "NUMBER_ARRAY") {
+                this._dataWorker = ((ar: any) => {
+                    let sum=0;
+                    for(const x of ar){
+                        sum+=x;
+                    }
+                    return sum/ar.length;
+                }) as any;
             }else this._dataWorker = ar => ar[0];
         }else this._dataWorker = dataWorker;
         this._frameLimit = frameLimit;
@@ -40,4 +48,4 @@ export class AverageEqualiser<T>{
     }
 }
 
-export type AverageEqualiserWorkerType = 'NUMERICAL_OBJ';
+export type AverageEqualiserWorkerType = 'NUMERICAL_OBJ' | "NUMBER_ARRAY";
