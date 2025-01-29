@@ -71,8 +71,8 @@ export class Arduino {
         }
     }
 
-    private static _slaveRegisterCallback: (id: number) => boolean;
-    public static run(callback: () => any, slaveRegisterCallback: (id: number) => boolean): void {
+    private static _slaveRegisterCallback: (id: number) => {allowRegistration: boolean, callback?: (id: number) => any};
+    public static run(callback: () => any, slaveRegisterCallback: (id: number) => {allowRegistration: boolean, callback?: (id: number) => any}): void {
         this._callback = callback;
         Arduino._slaveRegisterCallback = slaveRegisterCallback;
     }
@@ -142,11 +142,13 @@ export class Arduino {
                 const id = packet[2];
                 if(Arduino._slaveRegisterCallback)
                 {
-                    const allowRegister = Arduino._slaveRegisterCallback(id);
-                    if(allowRegister){
-                        console.log(`Registering a ${id} slave`);
-                    }else console.log(`Deny register a ${id} slave`);
-                    Arduino.send([1,allowRegister?1:2,id]);
+                    const data = Arduino._slaveRegisterCallback(id);
+                    if(data.allowRegistration){
+                        console.log(`Registering new slave ${id}`);
+                    }else console.log(`Deny register for slave ${id}`);
+                    Arduino.send([1,data.allowRegistration?1:2,id]);
+                    if(data.callback)
+                        setTimeout(() => (data.callback as (id: number) => any)(id), 500);
                 }
             }
         }

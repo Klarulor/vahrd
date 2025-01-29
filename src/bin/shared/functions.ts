@@ -13,12 +13,10 @@ import { RemoteDesktopSlave } from "../controllers/remote/RemoteDesktopSlave";
 export function createProvider(args: IProviderConstructorArgs, dev: Device): ProviderBase {
     let obj: ProviderBase | null = null;
     if (args.type === "VIRTUAL") {
-        // Отложенный динамический импорт
         obj = new VirtualProvider(args, dev);
     }else if(args.type == "ARDUINO"){
         obj = new ArduinoProvider(args as IArduinoProviderConstructorArgs, dev);
     }
-    // Добавьте другие типы провайдеров по необходимости
     return obj as ProviderBase;
 }
 

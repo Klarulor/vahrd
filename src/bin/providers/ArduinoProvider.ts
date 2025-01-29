@@ -107,5 +107,8 @@ export interface IVirtualDallasModule extends IVirtualModule{
 export interface IVirtualEnsModule extends IVirtualModule{
 
 }
+export interface IVirtualNulModule extends IVirtualModule{
+
+}
 
 export type VirtualConnectorType = "PIN" | "DALLAS" | "ENS" | "DETACHED_TEMPERATURE_SENSOR";

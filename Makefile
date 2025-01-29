@@ -5,7 +5,8 @@ build:
 push:
 	docker push 192.168.0.20:5000/vahrd:latest
 update:
+	make check
 	make build
 	make push
 check:
-	tsc -p
+	tsc -p .

@@ -159,6 +159,26 @@
           }
         }
       }
+    },
+    {
+      "id": "desktop_slave",
+      "isDevice": true,
+      "mqtt": {
+        "isEnabled": false
+      },
+      "controller": {
+        "type": "REMOTE_DESKTOP",
+        "args": {}
+      },
+      "provider": {
+        "type": "ARDUINO",
+        "args": {
+          "connector": {
+            "type": "REMOTE_DESKTOP",
+            "module": {}
+          }
+        }
+      }
     }
   ]
 }

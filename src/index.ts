@@ -5,13 +5,13 @@ import {Device, IDeviceContructorArgs} from "./bin/Device";
 import {runStorage, saveDevice} from "./Storage";
 import {initMqtt, runMqtt} from "./modules/mqtt";
 import {Arduino} from "./modules/arduino";
-import { RemoteConstrollerBase } from "./bin/RemoteControllerBase";
+import { RemoteControllerBase } from "./bin/RemoteControllerBase";
 
 (() => {
     Arduino.run(() => {
         initMqtt();
         runStorage();
         runMqtt();
-    }, RemoteConstrollerBase.allowRegister);
+    }, RemoteControllerBase.allowRegister);
 
 })()

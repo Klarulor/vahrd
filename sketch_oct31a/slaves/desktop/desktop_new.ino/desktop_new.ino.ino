@@ -14,17 +14,24 @@ byte* slice(byte* source, byte startIndex, byte endIndex){
 
 LiquidCrystal_I2C lcd(0x27,16,2);
 
+
 void setup() {
   Serial.begin(9600);
   lcd.init();
   lcd.backlight();
   delay(1000);
+  //tryInit();
+}
+
+void tryInit(){
   byte* buf = new byte[4]{3,1,ID,1};
   Serial.write(buf, 4);
+  delete[] buf;
 }
 
 byte packet[256];
 bool identified = false;
+bool isSerialConnected = false;
 void readPacket(byte len){
   if(packet[1] != ID) return;
   if(len == 3 && packet[2] == 1){
@@ -84,10 +91,15 @@ void readLCCmd(byte* cmd, byte len){
     break;
   }
 }
+long tick=0;
 void readSerial(){
   static byte inx=0;
   static byte length=0; 
+  if(!isSerialConnected && tick++ % 4000 == 0){
+    tryInit();
+  }
   if(Serial.available()){
+    isSerialConnected = true;
     byte b = (byte)Serial.read();
     if(length == 0){
       length = b;

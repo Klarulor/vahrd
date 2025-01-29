@@ -3,11 +3,11 @@ import { Arduino } from "../../../modules/arduino";
 import { IControllerConstructorArgs } from "../../ControllerBase";
 import { Device } from "../../Device";
 import { ArduinoProvider } from "../../providers/ArduinoProvider";
-import { IRemoteControllerBaseArgs, RemoteConstrollerBase } from "../../RemoteControllerBase";
+import { IRemoteControllerBaseArgs, RemoteControllerBase } from "../../RemoteControllerBase";
 import { TextEncoder } from 'node:util'
 import { getTextTime } from "../../shared/primitivesFunctions";
 
-export class RemoteDesktopSlave extends RemoteConstrollerBase{
+export class RemoteDesktopSlave extends RemoteControllerBase{ // 13x2
     private readonly _ArduinoProvider: ArduinoProvider;
     constructor(args: IControllerConstructorArgs, dev: Device) {
         super(args, dev);
@@ -15,20 +15,35 @@ export class RemoteDesktopSlave extends RemoteConstrollerBase{
     }
     private _deviceId = 1;
     onProviderReady = () => {
-        this.register(this.args.args as IRemoteDesktopSlaveControllerArgs)
-        console.log(`Slave ready`);
+        this.register((this.args.args as IRemoteDesktopSlaveControllerArgs).ids, this);
+        console.log(`RMS ready`);
+
+    }
+
+    protected onSlaveReady(id: number): any {
         this.drawTestScreen();
         console.log(`DROOOOOOOOOOOOOOOOOOOOOOOOOVE`);
     }
 
     private drawTestScreen(): void{
-        this.clearDiaplay();
+        this.clearDisplay();
         this.turnOnBacklight();
         this.print("Yo 12345");
+        setTimeout(() => this.drawScreen(), 1200);
     }
+    private _curIter: number = 0;
     private drawScreen(): void{
-        const time = getTextTime();
-        
+        const time = getTextTime(true);
+        this.clearDisplay();
+        this.setCursor(8, 3);
+        this.print(time);
+        this.setCursor(0,0);
+        this.print((this._curIter++).toString());
+        setTimeout(() => this.drawScreen, 1000);
+    }
+
+    serialize = () => {
+        return this.args.args as IRemoteDesktopSlaveControllerArgs;
     }
 
     // commands
@@ -38,7 +53,7 @@ export class RemoteDesktopSlave extends RemoteConstrollerBase{
     private turnOnBacklight(): void {
         Arduino.sendRemote(this._deviceId, [1]);
     }
-    private clearDiaplay(): void {
+    private clearDisplay(): void {
         Arduino.sendRemote(this._deviceId, [2]);
     }
     private blinkOn(): void {
