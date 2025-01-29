@@ -51,11 +51,11 @@ export class RemoteDesktopSlave extends RemoteControllerBase{ // 13x2
         this.clearDisplay();
         this.setCursor(8, 3);
         this.print(time);
-        //this.setCursor(0,0);
+        this.setCursor(0,0);
         const txt = (this._curIter++).toString();
-        //this.print(txt);
-        //this.setCursor(txt.length+1, 0);
-        //this.print(this.getIterSymbol());
+        this.print(txt);
+        this.setCursor(txt.length+1, 0);
+        this.print(this.getIterSymbol());
         console.log(`Wrote`);
         setTimeout(() => this.drawScreen(), 1000);
     }

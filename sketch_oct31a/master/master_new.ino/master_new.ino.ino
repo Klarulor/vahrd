@@ -9,7 +9,7 @@ ScioSense_ENS160 ens160(ENS160_I2CADDR_1);
 Adafruit_AHTX0 aht;
 
 void setup() {
-  Serial.begin(9600); // main
+  Serial.begin(115200); // main
   Serial1.begin(9600);
   Serial.write(1);
   ens160.begin();

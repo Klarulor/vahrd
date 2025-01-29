@@ -13,7 +13,7 @@ export class Arduino {
     constructor() {
         this._port = new SerialPort({
             path: process.platform == "win32" ? "COM3" : "/dev/ttyS3",//getConfig()?.SERIAL_PORT || "COM4",
-            baudRate: 9600
+            baudRate: 115200
         });
         this._port.on('data', this.onData);
         this._port.on("connect", (port: SerialPort) => {
