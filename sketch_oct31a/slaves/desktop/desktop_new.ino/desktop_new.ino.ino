@@ -50,6 +50,7 @@ void readCmd(byte* cmd, byte len){
   if(cmd[0] < 9){
     readLCCmd(cmd, len);
   }
+  delete[] cmd;
 }
 
 void readLCCmd(byte* cmd, byte len){

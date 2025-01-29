@@ -29,17 +29,35 @@ export class RemoteDesktopSlave extends RemoteControllerBase{ // 13x2
         this.clearDisplay();
         this.turnOnBacklight();
         this.print("Yo 12345");
+        this.blinkOn();
         setTimeout(() => this.drawScreen(), 1200);
     }
     private _curIter: number = 0;
+    private _curSmallIter: number = 0;
+    private getIterSymbol(): string{
+        if(this._curSmallIter == 2)
+            this._curSmallIter = 0;
+        switch (this._curSmallIter++){
+            case 0:
+                return "+";
+            case 1:
+                return "-";
+            default: return "Z";
+        }
+    }
     private drawScreen(): void{
+        console.log(`Writing`);
         const time = getTextTime(true);
         this.clearDisplay();
         this.setCursor(8, 3);
         this.print(time);
-        this.setCursor(0,0);
-        this.print((this._curIter++).toString());
-        setTimeout(() => this.drawScreen, 1000);
+        //this.setCursor(0,0);
+        const txt = (this._curIter++).toString();
+        //this.print(txt);
+        //this.setCursor(txt.length+1, 0);
+        //this.print(this.getIterSymbol());
+        console.log(`Wrote`);
+        setTimeout(() => this.drawScreen(), 1000);
     }
 
     serialize = () => {
