@@ -2,7 +2,7 @@ const {SerialPort} = require(`SerialPort`);
 
 
 const port = new SerialPort({
-    path: process.platform == "win32" ? "COM3" : "/dev/ttyS3",//getConfig()?.SERIAL_PORT || "COM4",
+    path: "COM7",//getConfig()?.SERIAL_PORT || "COM4",
     baudRate: 9600
 });
 
@@ -27,9 +27,9 @@ function onInit(){
 port.on('data', x => {
     const ar = Array.from(x); // data - это Buffer
     console.log(ar); // Вывод массива байтов, например [10, 20, 30]
-    if(ar[1] === 1 && ar[0] === 3){
-        console.log(`initing`);
-        port.write([3,1,1,1]);
-        setTimeout(onInit, 500);
-    }
+    // if(ar[1] === 1 && ar[0] === 3){
+    //     console.log(`initing`);
+    //     port.write([3,1,1,1]);
+    //     setTimeout(onInit, 500);
+    // }
 });

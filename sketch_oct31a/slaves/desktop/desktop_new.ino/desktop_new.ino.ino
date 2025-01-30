@@ -83,14 +83,14 @@ void readLCCmd(byte* cmd, byte len){
       lcd.setCursor(x,y);
     break;
     case 8:
-      String str = "";
       for (byte i = 1; i < len; i++) {
-        str += (char)cmd[i];
-        Serial.write(cmd[i]);
+        lcd.print((char)cmd[i]);
       }
-      lcd.print(str);
+      
     break;
   }
+  
+ 
 }
 long tick=0;
 void readSerial(){

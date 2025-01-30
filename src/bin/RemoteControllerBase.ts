@@ -13,7 +13,7 @@ export class RemoteControllerBase extends ControllerBase{
 
     public static allowRegister(id: number): {allowRegistration: boolean, callback?: (id: number) => any}{
         console.log(`----------------------------------------------------------------------------------------------------${id}`);
-        if(!RemoteControllerBase._connectedIds.includes(id)){
+        if(!RemoteControllerBase._connectedIds.includes(id) || true){
             const worker = RemoteControllerBase._allowedIds[id];
             if(!worker) throw `No worker found for ${id} id`;
             RemoteControllerBase._connectedIds.push(id);
