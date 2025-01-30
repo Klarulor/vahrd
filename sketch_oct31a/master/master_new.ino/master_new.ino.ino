@@ -39,8 +39,8 @@ void readPacket(byte* packet, byte len){
       pck[1]=2;
       pck[2]=id;
       pck[3]=1;
-      for(int i =0;i<=dataSize;i++){
-        pck[i+4] = packet[i+3];
+      for(int i = 0; i < dataSize; i++) {
+        pck[i + 4] = packet[i + 3];
       }
       Serial1.write(pck, pckSize);
       //Serial.write(pck, pckSize);
@@ -79,8 +79,9 @@ void readPacket(byte* packet, byte len){
       sensors.begin();
       sensors.requestTemperatures();
       float num = sensors.getTempCByIndex(0);
+      int integerTemp=static_cast<int>(num*10);
       if(num < 0) num = 0;
-      byte* bytes =new byte[5]{4,2,4,s,(int)(num * 10)};
+      byte* bytes =new byte[5]{4,2,4,s,num/10,num%10};
       Serial.write(bytes, 5);
       delete[] bytes;
     }else if(packet[1] == 5){
