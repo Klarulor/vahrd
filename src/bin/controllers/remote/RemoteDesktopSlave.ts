@@ -24,12 +24,14 @@ export class RemoteDesktopSlave extends RemoteControllerBase{ // 13x2
         this.drawTestScreen();
         console.log(`DROOOOOOOOOOOOOOOOOOOOOOOOOVE`);
     }
-
+    private _drawing: boolean = false;
     private drawTestScreen(): void{
         this.clearDisplay();
         this.turnOnBacklight();
         this.print("Yo 12345");
         this.blinkOn();
+        if(this._drawing) return console.log(`Drawing already`);
+        this._drawing = true;
         setTimeout(() => this.drawScreen(), 1200);
     }
     private _curIter: number = 0;

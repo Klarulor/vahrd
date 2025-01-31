@@ -54,6 +54,7 @@ void readCmd(byte* cmd, byte len){
 }
 
 void readLCCmd(byte* cmd, byte len){
+  delay(10);
   switch(cmd[0]){
     case 0:
       lcd.noBacklight();
