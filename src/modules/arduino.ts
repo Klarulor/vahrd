@@ -165,7 +165,8 @@ export class Arduino {
                 const v1 = packet[3], v = packet[4];
                 const callback = Arduino.instance._readDallasCallbacks[signature];
                 if(!callback) return console.log(`No dallas callback for signature ${signature}`);
-                callback(parseFloat((v1*10+v).toFixed(2)));
+                //console.log(`dallas response`, v1,v)
+                callback(parseFloat((v1+v/10).toFixed(2)));
                 delete Arduino.instance._readDallasCallbacks[signature];
             }else if(packet[1] == 5){ // read ens response
                 const signature = packet[2];
