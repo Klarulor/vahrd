@@ -1,5 +1,5 @@
 name: Docker Build and Push
-run-name: ${{ github.actor }} runned dev branch update in Docker Hub
+run-name: ${{ github.actor }} ran dev branch update in Docker Hub
 on:
   push:
     branches:
