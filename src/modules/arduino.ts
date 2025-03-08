@@ -12,7 +12,7 @@ export class Arduino {
     private static _isArduinoReady: boolean = false;
     constructor() {
         this._port = new SerialPort({
-            path: process.platform == "win32" ? "COM3" : "/dev/ttyS3",//getConfig()?.SERIAL_PORT || "COM4",
+            path: process.platform == "win32" ? "COM7" : "/dev/ttyS3",//getConfig()?.SERIAL_PORT || "COM4",
             baudRate: 115200
         });
         this._port.on('data', this.onData);
@@ -137,6 +137,9 @@ export class Arduino {
         console.log(`Handling ${packet.join(' ')}`);
         const size = packet[0];
         packet = packet.slice(1, packet.length);
+        if(packet[0] == 9){
+            console.log(`Runtime exception was throw:\nThe exeption code is ${packet[1]}`);
+        }
         if(packet[0] == 1){
             if(packet[1] == 1){
                 const id = packet[2];
@@ -165,8 +168,8 @@ export class Arduino {
                 const v1 = packet[3], v = packet[4];
                 const callback = Arduino.instance._readDallasCallbacks[signature];
                 if(!callback) return console.log(`No dallas callback for signature ${signature}`);
-                console.log(`v1: ${v1} v: ${v}`);
-                callback(parseFloat(((v1*10+v)/10).toFixed(2)));
+                console.log(`__________________________________________________________dallas response`, v1,v)
+                callback(parseFloat(((v1+v/10)).toFixed(2)));
                 delete Arduino.instance._readDallasCallbacks[signature];
             }else if(packet[1] == 5){ // read ens response
                 const signature = packet[2];

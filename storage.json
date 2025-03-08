@@ -29,6 +29,34 @@
       }
     },
     {
+      "id": "ledpowerbybatterrelay",
+      "isDevice": true,
+      "mqtt": {
+        "isEnabled": true
+      },
+      "controller": {
+        "type": "BULB",
+        "args": {
+          "isTurnedOn": false,
+          "isPWMEnabled": false,
+          "pwmValue": 250
+        }
+      },
+      "provider": {
+        "type": "ARDUINO",
+        "args": {
+          "connector": {
+            "type": "PIN",
+            "module": {
+              "pin": 62,
+              "type": "ANALOG",
+              "mode": "WRITE"
+            }
+          }
+        }
+      }
+    },
+    {
       "id": "testMon",
       "isDevice": true,
       "mqtt": {
@@ -91,7 +119,7 @@
       "controller": {
         "type": "TEMPERATURE_SENSOR",
         "args": {
-          "value": 19.6
+          "value": 19.7
         }
       },
       "provider": {
@@ -116,11 +144,11 @@
         "type": "ENS",
         "args": {
           "value": {
-            "temperature": 20,
-            "humidity": 21,
-            "tvoc": 11,
-            "aqi": 1,
-            "eco2": 400
+            "temperature": 0,
+            "humidity": 0,
+            "aqi": 255,
+            "eco2": 255,
+            "tvoc": 255
           }
         }
       },
@@ -143,7 +171,7 @@
       "controller": {
         "type": "DETACHED_TEMPERATURE_SENSOR",
         "args": {
-          "value": 0
+          "value": 475
         }
       },
       "provider": {
@@ -168,7 +196,11 @@
       },
       "controller": {
         "type": "REMOTE_DESKTOP",
-        "args": {}
+        "args": {
+          "ids": [
+            1
+          ]
+        }
       },
       "provider": {
         "type": "ARDUINO",
