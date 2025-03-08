@@ -133,7 +133,7 @@ export class Arduino {
         Arduino.send([1,3,id,...remotePacket]);
     }
     public static restartRemote(id: number): void{
-        Arduino.send([1,3,id, 255])
+        Arduino.send([1,4,id]);
     }
 
     private static readPacket(packet: number[]): void{

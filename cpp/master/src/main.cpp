@@ -59,6 +59,16 @@ void readPacket(byte* packet, byte len){
       Serial1.write(pck, pckSize);
       //Serial.write(pck, pckSize);
       delete[] pck;
+    }else if(packet[1] == 4){ // send reset packet
+      byte id = packet[2];
+      byte* pck = new byte[5];
+      pck[0]=4;
+      pck[1]=3;
+      pck[2]=1;
+      pck[3]=id;
+      pck[4]=2;
+      Serial.write(pck, 5);
+      delete[] pck;
     }
   }else if(packet[0] == 2){
     if(packet[1] == 0){ // pinMode
