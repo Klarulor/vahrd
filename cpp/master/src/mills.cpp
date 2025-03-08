@@ -1,7 +1,7 @@
 #include "mills.h"
 #include "Arduino.h"
 
-#define AWAITERS_COUNT 8
+#define AWAITERS_COUNT 16
 TickAwaiter awaiters[AWAITERS_COUNT] = {};
 
 void add_100ms_listener(ListenerFunc pFunc){

@@ -132,6 +132,9 @@ export class Arduino {
     public static sendRemote(id: number, remotePacket: number[]): void{
         Arduino.send([1,3,id,...remotePacket]);
     }
+    public static restartRemote(id: number): void{
+        Arduino.send([1,3,id, 255])
+    }
 
     private static readPacket(packet: number[]): void{
         console.log(`Handling ${packet.join(' ')}`);
