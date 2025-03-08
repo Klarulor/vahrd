@@ -21,7 +21,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/vahrd:dev .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/vahrd:dev --platform linux/arm64,linux/amd64 .
 
       - name: Push Docker image
         run: |
