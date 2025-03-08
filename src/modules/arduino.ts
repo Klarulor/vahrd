@@ -138,9 +138,11 @@ export class Arduino {
         const size = packet[0];
         packet = packet.slice(1, packet.length);
         if(packet[0] == 9){
-            console.log(`Runtime exception was throw:\nThe exeption code is ${packet[1]}`);
+            let str = `Runtime exception was throw:\nThe exeption code is ${packet[1]}`;
+            console.log(str);
+            process.exit(str);
         }
-        if(packet[0] == 1){
+        else if(packet[0] == 1){
             if(packet[1] == 1){
                 const id = packet[2];
                 if(Arduino._slaveRegisterCallback)

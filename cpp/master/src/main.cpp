@@ -15,15 +15,24 @@ void setup() {
   Serial1.begin(9600);
   Serial.write(1);
   start_ens();
-  if (!aht.begin()) {
-    throw_error(1);
-  }
+  
 }
 
 OneWire oneWire(2);
 DallasTemperature sensors(&oneWire);
 
+bool firstMessage;
+void on_first_message(){
+  if (!aht.begin()) {
+    throw_error(1);
+  }
+}
+
 void readPacket(byte* packet, byte len){
+  if(!firstMessage){
+    on_first_message();
+    firstMessage = true;
+  }
   if(packet[0] == 1){
     if(packet[1] == 1){ // allow slave connection
       byte id = packet[2];

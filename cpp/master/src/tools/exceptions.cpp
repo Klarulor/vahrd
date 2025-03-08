@@ -5,6 +5,6 @@ void throw_error(byte errorCode, bool breakRuntime = true){
     Serial.write(bytes, 3);
     delete[] bytes;
     if(breakRuntime){
-        while(1){}
+        while(1);
     }
 }

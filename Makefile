@@ -1,5 +1,5 @@
 run:
-	npx ts-node src
+	npm run start
 build:
 	docker build -t 192.168.0.20:5000/vahrd:latest --platform linux/arm64,linux/amd64 .
 push:
