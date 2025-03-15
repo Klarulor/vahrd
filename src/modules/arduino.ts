@@ -29,7 +29,7 @@ export class Arduino {
     private static buffer: number[] = [];
     private onData(data: Buffer): void{
         const ar = Array.from(data);
-        console.log(`Receiving packet`, ar.map(x => `${x}`).join(' '));
+        //console.log(`Receiving packet`, ar.map(x => `${x}`).join(' '));
         if(!Arduino._initialized && ar.length == 1 && ar[0] == 1){
             console.log(`Arduino was confirmed by serial`);
             Arduino._initialized = true;
@@ -145,7 +145,7 @@ export class Arduino {
             console.log(str);
             process.exit(str);
         }else if(packet[0] == 10){
-            console.log(`\n[WARNING!] LOG: ${String.fromCharCode(...packet.slice(1, size))}\n`)
+            console.log(`[!] LOG: ${String.fromCharCode(...packet.slice(1, size))}`)
         }
         else if(packet[0] == 1){
             if(packet[1] == 1){
