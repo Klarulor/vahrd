@@ -144,6 +144,8 @@ export class Arduino {
             let str = `Runtime exception was throw:\nThe exeption code is ${packet[1]}`;
             console.log(str);
             process.exit(str);
+        }else if(packet[0] == 10){
+            console.log(`\n[WARNING!] LOG: ${String.fromCharCode(...packet.slice(1, size))}\n`)
         }
         else if(packet[0] == 1){
             if(packet[1] == 1){

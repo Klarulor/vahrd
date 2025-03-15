@@ -119,7 +119,7 @@
       "controller": {
         "type": "TEMPERATURE_SENSOR",
         "args": {
-          "value": 22.3
+          "value": 21.1
         }
       },
       "provider": {
@@ -144,11 +144,11 @@
         "type": "ENS",
         "args": {
           "value": {
-            "temperature": 0,
-            "humidity": 0,
-            "aqi": 255,
-            "eco2": 255,
-            "tvoc": 255
+            "temperature": 24,
+            "humidity": 30,
+            "aqi": 4,
+            "eco2": 1036,
+            "tvoc": 1142
           }
         }
       },
@@ -171,7 +171,7 @@
       "controller": {
         "type": "DETACHED_TEMPERATURE_SENSOR",
         "args": {
-          "value": 470
+          "value": 468
         }
       },
       "provider": {

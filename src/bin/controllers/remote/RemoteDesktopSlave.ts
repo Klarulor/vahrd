@@ -32,7 +32,10 @@ export class RemoteDesktopSlave extends RemoteControllerBase{ // 13x2
         this.blinkOn();
         if(this._drawing) return console.log(`Drawing already`);
         this._drawing = true;
-        setTimeout(() => this.drawScreen(), 1200);
+        setTimeout(() => {
+            this.clearDisplay();
+            this.drawScreen();
+        }, 1200);
     }
     private _curIter: number = 0;
     private _curSmallIter: number = 0;
@@ -50,7 +53,7 @@ export class RemoteDesktopSlave extends RemoteControllerBase{ // 13x2
     private drawScreen(): void{
         console.log(`Writing`);
         const time = getTextTime(true);
-        this.clearDisplay();
+        //this.clearDisplay();
         this.setCursor(8, 3);
         this.print(time);
         this.setCursor(0,0);

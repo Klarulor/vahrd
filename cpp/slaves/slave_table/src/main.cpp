@@ -41,7 +41,11 @@ bool isSerialConnected = false;
 void readPacket(byte len){
   if(packet[1] != ID) return;
   if(len == 3 && packet[2] == 1){
-    identified = true;
+    {
+      if(identified)
+        resetFunc();
+      identified = true;
+    }
   }else if(len == 3 && packet[2] == 2){
     resetFunc();
   }

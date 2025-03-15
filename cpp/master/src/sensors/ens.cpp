@@ -1,6 +1,8 @@
 #include "ens.h"
 #include <ScioSense_ENS160.h>
 #include "mills.h"
+#include <tools/exceptions.h>
+#include <tools/log.h>
 
 struct EnsReadStruct{
     int tempC, humidity;
@@ -10,9 +12,9 @@ struct EnsReadStruct{
 ScioSense_ENS160 ens160(ENS160_I2CADDR_1);
 
 void start_ens(){
-    ens160.begin();
-    ens160.available();
-    ens160.setMode(ENS160_OPMODE_STD);
+    if(!ens160.begin()) throw_error(81, true);
+    if(!ens160.available()) throw_error(82, true);
+    if(!ens160.setMode(ENS160_OPMODE_STD)) throw_error(83, true);
 }
 
 #define SIGNATURE_LENGTH 8
@@ -23,77 +25,75 @@ bool active;
 void produce();
 
 void produce_ens(byte s, int tempC, int humidity){
-    readStruct.tempC = tempC;
-    readStruct.humidity = humidity;
-
+    //if(s == 0) throw_error(84, false);
+    
+    bool slotFound = false;
     for(int i=0;i<SIGNATURE_LENGTH;i++){
         if(signatures[i] == 0){
             signatures[i] = s;
-            produce();
-            return;
+            slotFound = true;
+            break;
         }
     }
+    if(!slotFound) throw_error(85, false);
+    
+    readStruct.tempC = tempC;
+    readStruct.humidity = humidity;
+    produce();
 }
 
 void produceZeroStage(){
+    if(readStruct.tempC < -400 || readStruct.tempC > 850) throw_error(86, false);
+    if(readStruct.humidity < 0 || readStruct.humidity > 1000) throw_error(87, false);
+    
+    send_log("Data: "+String(readStruct.tempC) + " " + String(readStruct.humidity));
+    bool r = true;
     ens160.set_envdata(readStruct.tempC, readStruct.humidity);
+    if(!r)
+        throw_error(88, false);
 }
 
 void productFirstStage(){
-    
-    ens160.measure(true);
+    if(!ens160.measure(true)) throw_error(89, false);
 }
+
 void produceSecondStage(){
-    ens160.measureRaw(true);
+    if(!ens160.measureRaw(true)) throw_error(90, false);
 }
+
 void produceThirdState(){
     int aqi = ens160.getAQI();
     int tvoc = ens160.getTVOC();
     int eco2 = ens160.geteCO2();
-    for (int i = 0; i < SIGNATURE_LENGTH; i++) {
+    
+    if(aqi < 1 || aqi > 5) throw_error(91, false);
+    if(tvoc < 0 || tvoc > 65000) throw_error(92, false);
+    if(eco2 < 0 || eco2 > 65000) throw_error(93, false);
+
+    for(int i = 0; i < SIGNATURE_LENGTH; i++){
         byte s = signatures[i];
-        if(s == 0)
-        {
-            continue;
-        }
+        if(s == 0) continue;
+        
+        if(s == 0) throw_error(96, false); // Дублирующая проверка
+        
         byte* bytes = new byte[11]{
             10,
             2, 5, s,
-            readStruct.tempC, readStruct.humidity, aqi,
-            eco2/10, eco2%10,
-            tvoc/10, tvoc%10
+            (byte)readStruct.tempC, (byte)readStruct.humidity, (byte)aqi,
+            (byte)(eco2/10), (byte)(eco2%10),
+            (byte)(tvoc/10), (byte)(tvoc%10)
         };
-        Serial.write(bytes, 11);
+        if(!bytes) throw_error(94, false);
+        
+        if(Serial.write(bytes, 11) != 11) throw_error(95, false);
         delete[] bytes;
         signatures[i] = 0;
     }  
 }
 
 void produce(){
-    //ens160.set_envdata(readStruct.tempC, readStruct.humidity);
-    
-    run_in(produceZeroStage, 300);
-    run_in(productFirstStage, 600);
-    run_in(produceSecondStage, 900);
-    run_in(produceThirdState, 1200);
+    if(!run_in(produceZeroStage, 300)) throw_error(97, false);
+    if(!run_in(productFirstStage, 600)) throw_error(98, false);
+    if(!run_in(produceSecondStage, 900)) throw_error(99, false);
+    if(!run_in(produceThirdState, 1200)) throw_error(100, false);
 }
-
-
-// ens160.set_envdata(tempC, humidity);
-//       delay(200);
-//       ens160.measure(true);
-//       delay(200);
-//       ens160.measureRaw(true);
-//       delay(200);
-//       int aqi = ens160.getAQI();
-//       int tvoc = ens160.getTVOC();
-//       int eco2 = ens160.geteCO2();
-//       byte* bytes = new byte[11]{
-//         10,
-//         2, 5, s,
-//         tempC, humidity, aqi,
-//         eco2/10, eco2%10,
-//         tvoc/10, tvoc%10
-//       };
-//       Serial.write(bytes, 11);
-//       delete[] bytes;

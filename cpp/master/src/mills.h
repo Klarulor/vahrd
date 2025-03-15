@@ -14,4 +14,4 @@ void add_1s_listener(ListenerFunc pFunc);
 
 void add_listener(ListenerFunc pFunc, int mills);
 
-void run_in(ListenerFunc pFunc, int mills);
+bool run_in(ListenerFunc pFunc, int mills);
