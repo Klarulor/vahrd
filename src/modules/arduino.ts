@@ -52,7 +52,7 @@ export class Arduino {
             }
             const packet = Arduino.buffer.slice(0, packetSize + 1);
             Arduino.buffer = Arduino.buffer.slice(packetSize + 1);
-            console.log(`Processing packet: ${packet.join(' ')}`);
+            //console.log(`Processing packet: ${packet.join(' ')}`);
             Arduino.readPacket(packet);
         }
 
@@ -137,7 +137,7 @@ export class Arduino {
     }
 
     private static readPacket(packet: number[]): void{
-        console.log(`Handling ${packet.join(' ')}`);
+        //console.log(`Handling ${packet.join(' ')}`);
         const size = packet[0];
         packet = packet.slice(1, packet.length);
         if(packet[0] == 9){

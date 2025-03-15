@@ -147,8 +147,8 @@
             "temperature": 24,
             "humidity": 30,
             "aqi": 4,
-            "eco2": 1036,
-            "tvoc": 1142
+            "eco2": 1030,
+            "tvoc": 1119
           }
         }
       },
@@ -171,7 +171,7 @@
       "controller": {
         "type": "DETACHED_TEMPERATURE_SENSOR",
         "args": {
-          "value": 468
+          "value": 472
         }
       },
       "provider": {

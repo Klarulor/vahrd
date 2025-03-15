@@ -7,6 +7,7 @@
 #include "mills.h"
 #include "sensors/ens.h"
 #include "tools/exceptions.h"
+#include "tools/log.h"
 
 Adafruit_AHTX0 aht;
 
@@ -168,6 +169,17 @@ void readSlavePacket(byte* packet, byte len) {
   }
 }
 
+String byteArrayToString(byte arr[], int len) {
+  String result = "";
+  for (int i = 0; i < len; i++) {
+      result += String(arr[i]);  // Преобразуем байт в строку
+      if (i < len - 1) {
+          result += " ";  // Добавляем пробел между числами
+      }
+  }
+  return result;
+}
+
 void readSerial0() {
   static byte size = 0;
   static byte inx = 0;
@@ -185,6 +197,8 @@ void readSerial0() {
     packet[inx++] = b;
     
     if(inx == size) {
+      String result = byteArrayToString(packet, size);
+      send_log("Reading packet("+String(size)+"): "+result);
       readPacket(packet, size);
       inx = 0;
       size = 0;
