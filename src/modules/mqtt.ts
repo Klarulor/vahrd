@@ -81,7 +81,7 @@ function onMessage(topic: string, message: Buffer){
     // home/testvirtualbulb/brightness/set
     // brightness/set
     const routeK = Object.keys(routes).find(x => x == `${target}/${action}`);
-    if(!routeK) return console.log('bad topic', topic,'\n',`Allowed: ${Object.keys(routes).join(' ')}`);
+    if(!routeK) return console.log('bad topic', topic,'\n',`Allowed: ${Object.keys(routes).map(x => `${target}/${x}`).join(' ')}`);
     const route = routes[routeK];
     if(route.set)
     {
