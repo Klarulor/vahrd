@@ -20,7 +20,7 @@ void start_ens(){
 #define SIGNATURE_LENGTH 8
 EnsReadStruct readStruct;
 byte signatures[SIGNATURE_LENGTH] = {0};
-bool active;
+//bool active;
 
 void produce();
 

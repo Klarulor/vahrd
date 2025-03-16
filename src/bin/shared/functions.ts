@@ -9,6 +9,7 @@ import {TemperatureSensorController} from "../controllers/TemperatureSensorContr
 import {EnsSensorController} from "../controllers/EnsSensorController";
 import {DetachedTemperatureSensor} from "../controllers/DetachedTemperatureSensor";
 import { RemoteDesktopSlave } from "../controllers/remote/RemoteDesktopSlave";
+import { RemoteLivingSlave } from "../controllers/remote/RemoteLivingSlave";
 
 export function createProvider(args: IProviderConstructorArgs, dev: Device): ProviderBase {
     let obj: ProviderBase | null = null;
@@ -33,5 +34,7 @@ export function createController(args: IControllerConstructorArgs, dev: Device):
         return new DetachedTemperatureSensor(args, dev);
     else if(args.type == "REMOTE_DESKTOP")
         return new RemoteDesktopSlave(args, dev);
+    else if(args.type == "REMOTE_LIVING")
+        return new RemoteLivingSlave(args, dev);
     return new BulbController(args, dev);
 }

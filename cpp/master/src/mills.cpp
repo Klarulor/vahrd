@@ -46,7 +46,7 @@ void mills_update(unsigned int millis){
         TickAwaiter& awaiter = awaiters[i];
         if(awaiter.active && (millis % awaiter.mills) == 0){
             awaiter.pFunc();
-            awaiter.active = false;
+            //awaiter.active = false;
         }
     }
     for(int i = 0; i < AWAITERS_COUNT; i++){

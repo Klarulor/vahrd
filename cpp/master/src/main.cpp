@@ -8,6 +8,7 @@
 #include "sensors/ens.h"
 #include "tools/exceptions.h"
 #include "tools/log.h"
+#include "runtime/subscriptions/pin.h"
 
 Adafruit_AHTX0 aht;
 
@@ -17,6 +18,11 @@ void setup() {
   if(!Serial || !Serial1) throw_error(100, true);
   
   Serial.write(1);
+  for(int i =1; i<255;i++){
+    byte* ar = new byte[4]{3,2,i,2};
+    Serial1.write(ar, 4);
+    delete[] ar;
+  }
   start_ens();
 }
 
@@ -29,7 +35,7 @@ void on_first_message() {
 }
 
 void readPacket(byte* packet, byte len) {
-  if(len < 2) throw_error(10, false);
+  //if(len < 2) throw_error(10, false);
 
   if(!firstMessage) {
     on_first_message();
@@ -143,8 +149,11 @@ void readPacket(byte* packet, byte len) {
       //throw_error(40, false);
     }
   }
-  else {
-    //throw_error(41, false);
+  else if(packet[0] == 3){
+    if(packet[1] == 1){
+      if(len < 9) throw_error(201, false);
+      add_subscription(packet[2],packet[3],packet[4]==0,packet[6]*10+packet[7],packet[8]);
+    }
   }
 }
 

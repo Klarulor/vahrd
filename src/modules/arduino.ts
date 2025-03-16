@@ -22,7 +22,7 @@ export class Arduino {
         })
     }
 
-    private _writeQueue: number[][] = [];
+    private _befWriteQueue: number[][] = [];
     private static _callback?: () => any;
     private static _readQueue: number[] = [];
     private static _isReadAvailable: boolean = false;
@@ -35,9 +35,9 @@ export class Arduino {
             Arduino._initialized = true;
             if(Arduino._callback)
                 Arduino._callback();
-            if(this._writeQueue){
-                console.log(`Sending queue messages: ${this._writeQueue}`);
-                for(const x of this._writeQueue){
+            if(this._befWriteQueue){
+                console.log(`Sending queue messages: ${this._befWriteQueue}`);
+                for(const x of this._befWriteQueue){
                     this.send(x);
                 }
             }
@@ -59,17 +59,44 @@ export class Arduino {
     }
 
     private static send = (data: number[]) => Arduino.instance.send(data);
-    private send(data: number[]): void{
-        const bytes = [data.length, ...data];
-        if(Arduino._initialized){
-            console.log(`Sending packet ${bytes}`);
-            this._port.write(bytes);
-            //console.log(`Sent packet`);
-        }else{
-            console.log(`Added packet to queue`);
-            this._writeQueue.push(data);
-        }
+    private _isSending: boolean = false;
+private _writeQueue: number[][] = [];
+
+private send(data: number[]): void {
+    if (this._isSending) {
+        console.log(`Packet queued: ${data}`);
+        this._writeQueue.push(data);
+        return;
     }
+    this._isSending = true;
+    this._writeData(data);
+}
+
+private _writeData(data: number[]): void {
+    const bytes = [data.length, ...data];
+    if (Arduino._initialized) {
+        //console.log(`Sending packet: ${bytes}`);
+        this._port.write(bytes, () => {
+        //console.log(`Packet sent: ${bytes}`);
+           setTimeout(() => {
+            this._isSending = false;
+            this._processQueue();
+           }, 100)
+        });
+    } else {
+        console.log(`Arduino not initialized. Packet queued: ${data}`);
+        this._writeQueue.push(data);
+        this._isSending = false;
+    }
+}
+
+private _processQueue(): void {
+    if (this._writeQueue.length > 0) {
+        const nextData = this._writeQueue.shift()!;
+        this.send(nextData);
+    }
+}
+
 
     private static _slaveRegisterCallback: (id: number) => {allowRegistration: boolean, callback?: (id: number) => any};
     public static run(callback: () => any, slaveRegisterCallback: (id: number) => {allowRegistration: boolean, callback?: (id: number) => any}): void {
