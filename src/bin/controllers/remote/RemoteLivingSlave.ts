@@ -42,7 +42,8 @@ export class RemoteLivingSlave extends RemoteControllerBase{ // 13x2
         this.register((this.args.args as IRemoteLivingSlaveControllerArgs).ids, this);
         console.log(`RLS ready`);
         const ownArgs = (this.args.args as IRemoteLivingSlaveControllerArgs);
-        this._curState = (ownArgs as any).value;
+        const v = (ownArgs as any).value;
+        this._curState = {isTurnedOn: v?.isTurnedOn || false, color: v?.color || "WHITE"};
     }
     serialize = () => ({
         value: this._curState
