@@ -4,6 +4,7 @@ import { IControllerConstructorArgs } from "../../ControllerBase";
 import { Device } from "../../Device";
 import { ArduinoProvider } from "../../providers/ArduinoProvider";
 import { IRemoteControllerBaseArgs, RemoteControllerBase } from "../../RemoteControllerBase";
+import { saveDevice } from "../../../Storage";
 export class RemoteLivingSlave extends RemoteControllerBase{ // 13x2
     private readonly _ArduinoProvider: ArduinoProvider;
     constructor(args: IControllerConstructorArgs, dev: Device) {
@@ -17,7 +18,9 @@ export class RemoteLivingSlave extends RemoteControllerBase{ // 13x2
                     if(nV != this._curState.isTurnedOn)
                         this.switch(2);
                     this._curState.isTurnedOn = nV;
-                    console.log(`changing state to ${nV}`)
+                    console.log(`changing state to ${nV}`);
+                    saveDevice(this.device);
+                    this.changeGlobalState();
                 }
             };
             dev.mqtt.routes["base/status"] = {
@@ -30,6 +33,8 @@ export class RemoteLivingSlave extends RemoteControllerBase{ // 13x2
                 set: x => {
                     this._curState.color = rgbToColor(x);
                     this.setColor(2, this._curState.color);
+                    saveDevice(this.device);
+                    this.changeGlobalState();
                 }
             }
         }
