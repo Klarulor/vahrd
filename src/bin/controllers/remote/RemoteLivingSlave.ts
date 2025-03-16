@@ -26,12 +26,13 @@ export class RemoteLivingSlave extends RemoteControllerBase{ // 13x2
             dev.mqtt.routes["base/status"] = {
                 get: () => ({
                     "state": `${this._curState.isTurnedOn ? "ON" : "OFF"}`,
-                    "color": getRGBColor(this._curState.color)
+                    "color": this._curState.ha_color
                 })
             };
             dev.mqtt.routes["color/set"] = {
                 set: x => {
                     this._curState.color = rgbToColor(x);
+                    this._curState.ha_color = x;
                     this.setColor(2, this._curState.color);
                     saveDevice(this.device);
                     this.changeGlobalState();
@@ -41,7 +42,8 @@ export class RemoteLivingSlave extends RemoteControllerBase{ // 13x2
     }
     private _curState: IRemoteLivingSlaveState = {
         isTurnedOn: false,
-        color: "NONE"
+        color: "NONE",
+        ha_color: "255,255,255"
     };
 
     onProviderReady = () => {
@@ -49,7 +51,7 @@ export class RemoteLivingSlave extends RemoteControllerBase{ // 13x2
         console.log(`RLS ready`);
         const ownArgs = (this.args.args as IRemoteLivingSlaveControllerArgs);
         const v = (ownArgs as any).value;
-        this._curState = {isTurnedOn: v?.isTurnedOn || false, color: v?.color || "WHITE"};
+        this._curState = {isTurnedOn: v?.isTurnedOn || false, color: v?.color || "WHITE", ha_color: v?.ha_color || "255,255,255"};
     }
     private _ids: number[] = [2];
     serialize = () => ({
@@ -91,6 +93,7 @@ export interface IRemoteLivingSlaveControllerArgs extends IRemoteControllerBaseA
 export interface IRemoteLivingSlaveState{
     isTurnedOn: boolean;
     color: RemoteLivingSlaveColor;
+    ha_color: string;
 }
 
 export type RemoteLivingSlaveColor = "NONE" | "WHITE" | "RED" | "GREEN" | "BLUE";
