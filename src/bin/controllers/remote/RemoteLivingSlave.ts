@@ -17,6 +17,7 @@ export class RemoteLivingSlave extends RemoteControllerBase{ // 13x2
                     if(nV != this._curState.isTurnedOn)
                         this.switch(2);
                     this._curState.isTurnedOn = nV;
+                    console.log(`changing state to ${nV}`)
                 }
             };
             dev.mqtt.routes["base/status"] = {
@@ -63,6 +64,7 @@ export class RemoteLivingSlave extends RemoteControllerBase{ // 13x2
         Arduino.sendRemote(id, [0, ...uint32ToBytes(v)]);
     }
     private switch(id: number): void{
+        console.log(`switcing`)
         this.sendRemoteData(id, convertStateToCommand("SWITCH"));
     }
     private setColor(id: number, color: RemoteLivingSlaveColor): void{
