@@ -20,7 +20,10 @@ let inited: boolean = false;
 export function runMqtt(){
     for(const dev of getDevices()){
         console.log('a1')
-        if(!dev.isDevice || !dev.mqtt || !dev.mqtt.isEnabled) continue;
+        if(!dev.isDevice || !dev.mqtt || !dev.mqtt.isEnabled){
+            console.log(`DENY: ${dev.id}`, !dev.isDevice , !dev.mqtt , !dev?.mqtt?.isEnabled)
+            continue;
+        }
         console.log('a2')
         console.log('a3', dev.mqtt.routes)
         for(const k in dev.mqtt.routes){
