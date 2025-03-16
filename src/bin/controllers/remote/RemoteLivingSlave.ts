@@ -29,7 +29,7 @@ export class RemoteLivingSlave extends RemoteControllerBase{ // 13x2
                     "color": getRGBColor(this._curState.color)
                 })
             };
-            dev.mqtt.routes["base/color/set"] = {
+            dev.mqtt.routes["color/set"] = {
                 set: x => {
                     this._curState.color = rgbToColor(x);
                     this.setColor(2, this._curState.color);
