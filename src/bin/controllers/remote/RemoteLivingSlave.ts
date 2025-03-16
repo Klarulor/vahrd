@@ -129,7 +129,7 @@ function getRGBColor(color: RemoteLivingSlaveColor): string{
 }
 function rgbToColor(rgb: string): RemoteLivingSlaveColor{
     const split = rgb.split(',').map(x => Number(x));
-    if(!split.filter(x => x <= 200)) return "WHITE";
+    if(split.filter(x => x >= 200).length > 1) return "WHITE";
     if(split[0] > 200) return "RED";
     if(split[1] > 200) return "GREEN";
     if(split[2] > 200) return "BLUE";
