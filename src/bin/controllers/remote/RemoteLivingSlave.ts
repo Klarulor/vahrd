@@ -45,8 +45,10 @@ export class RemoteLivingSlave extends RemoteControllerBase{ // 13x2
         const v = (ownArgs as any).value;
         this._curState = {isTurnedOn: v?.isTurnedOn || false, color: v?.color || "WHITE"};
     }
+    private _ids: number[] = [2];
     serialize = () => ({
-        value: this._curState
+        value: this._curState,
+        ids: this._ids,
     });
 
     protected onSlaveReady(id: number): any {
